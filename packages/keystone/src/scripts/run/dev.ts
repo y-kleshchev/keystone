@@ -16,6 +16,7 @@ import {
   requirePrismaClient,
 } from '../../artifacts';
 import { getAdminPath, getConfigPath } from '../utils';
+import { sendTelemetryEvent } from '../telemetry';
 
 type ExpressServer = null | ReturnType<typeof express>;
 type AdminUIMiddleware = null | ((req: express.Request, res: express.Response) => Promise<void>);
@@ -45,6 +46,9 @@ export const dev = async (cwd: string, shouldDropDatabase: boolean) => {
     console.log('✨ Generating GraphQL and Prisma schemas');
     const prismaSchema = (await generateCommittedArtifacts(graphQLSchema, config, cwd)).prisma;
     await generateNodeModulesArtifacts(graphQLSchema, config, cwd);
+
+    // Send telemetry
+    sendTelemetryEvent('keystone-build', 'development', cwd, prismaSchema, config.lists);
 
     // Set up the Database
     if (config.db.useMigrations) {
