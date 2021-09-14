@@ -2,10 +2,6 @@ import os from 'os';
 import { createHash } from 'crypto';
 import fetch from 'node-fetch';
 import { machineIdSync } from 'node-machine-id';
-import { ListSchemaConfig } from '..';
-
-// To update default with production endpoint when available
-const TELEMETRY_ENDPOINT = process.env.TELEMETRY_ENDPOINT || 'http://localhost:4000';
 
 const hashText = (text: string) => {
   return createHash('sha256').update(text).digest('hex');
@@ -15,8 +11,7 @@ export function sendTelemetryEvent(
   event: string,
   environment: string,
   cwd: string,
-  prismaSchema?: string,
-  lists?: ListSchemaConfig
+  prismaSchema?: string
 ) {
   try {
     if (process.env.TELEMETRY_DISABLED === 'true') {
@@ -34,10 +29,10 @@ export function sendTelemetryEvent(
       osLanguage:
         process.env.LC_ALL || process.env.LC_MESSAGES || process.env.LANG || process.env.LANGUAGE,
       event,
-      meta: lists && {
-        listCount: Object.keys(lists).length,
-      },
     };
+
+    // TODO::: update default with production endpoint when available
+    const TELEMETRY_ENDPOINT = process.env.TELEMETRY_ENDPOINT || 'http://localhost:4000';
 
     // Do not `await` to keep non-blocking
     fetch(`${TELEMETRY_ENDPOINT}/event`, {
