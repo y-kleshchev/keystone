@@ -24,7 +24,7 @@ export function sendTelemetryEvent(
     }
 
     const eventData = {
-      device: machineIdSync(), // By default will be hashed
+      device: machineIdSync(), // Will be hashed by default
       project: process.env.TELEMETRY_PROJECT || hashText(cwd),
       schema: prismaSchema && hashText(prismaSchema),
       // Will need to change this in a way that won't break when keystone isn't next anymore
@@ -46,7 +46,9 @@ export function sendTelemetryEvent(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(eventData),
-    }).then();
+    })
+      .then()
+      .catch(() => {});
   } catch (err) {
     // Fail silently
   }

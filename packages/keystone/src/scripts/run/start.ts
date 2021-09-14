@@ -6,7 +6,7 @@ import { createExpressServer } from '../../lib/server/createExpressServer';
 import { createAdminUIMiddleware } from '../../lib/server/createAdminUIMiddleware';
 import { requirePrismaClient } from '../../artifacts';
 import { ExitError, getAdminPath } from '../utils';
-import { sendTelemetryEvent } from '../telemetry';
+import { sendTelemetryEvent } from '../../lib/telemetry';
 
 export const start = async (cwd: string) => {
   console.log('✨ Starting Keystone');

@@ -9,6 +9,7 @@ import { requireSource } from '../../lib/config/requireSource';
 import { defaults } from '../../lib/config/defaults';
 import { createExpressServer } from '../../lib/server/createExpressServer';
 import { createAdminUIMiddleware } from '../../lib/server/createAdminUIMiddleware';
+import { sendTelemetryEvent } from '../../lib/telemetry';
 import {
   generateCommittedArtifacts,
   generateNodeModulesArtifacts,
@@ -16,7 +17,6 @@ import {
   requirePrismaClient,
 } from '../../artifacts';
 import { getAdminPath, getConfigPath } from '../utils';
-import { sendTelemetryEvent } from '../telemetry';
 
 type ExpressServer = null | ReturnType<typeof express>;
 type AdminUIMiddleware = null | ((req: express.Request, res: express.Response) => Promise<void>);
