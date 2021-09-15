@@ -1,4 +1,4 @@
 export const defaults = {
   healthCheckPath: '/_healthcheck',
-  telemetryEndpoint: 'https://keystone-telemetry.herokuapp.com/',
+  telemetryEndpoint: 'https://telemetry.keystonejs.com',
 } as const;
