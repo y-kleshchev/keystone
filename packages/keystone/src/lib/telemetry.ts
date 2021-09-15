@@ -2,6 +2,7 @@ import os from 'os';
 import { createHash } from 'crypto';
 import fetch from 'node-fetch';
 import { machineIdSync } from 'node-machine-id';
+import { defaults } from './config/defaults';
 
 const hashText = (text: string) => {
   return createHash('sha256').update(text).digest('hex');
@@ -31,11 +32,10 @@ export function sendTelemetryEvent(
       event,
     };
 
-    // TODO::: update default with production endpoint when available
-    const TELEMETRY_ENDPOINT = process.env.TELEMETRY_ENDPOINT || 'http://localhost:4000';
+    const telemetryEndpoint = process.env.TELEMETRY_ENDPOINT || defaults.telemetryEndpoint;
 
     // Do not `await` to keep non-blocking
-    fetch(`${TELEMETRY_ENDPOINT}/event`, {
+    fetch(`${telemetryEndpoint}/event`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,6 +43,7 @@ export function sendTelemetryEvent(
       body: JSON.stringify(eventData),
     })
       .then()
+      // Catch silently
       .catch(() => {});
   } catch (err) {
     // Fail silently
