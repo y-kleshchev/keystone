@@ -22,7 +22,7 @@ export const start = async (cwd: string) => {
   const { getKeystone, graphQLSchema } = createSystem(config);
 
   // Send telemetry
-  sendTelemetryEvent('keystone-build', 'production', cwd);
+  sendTelemetryEvent('keystone-build', cwd, config.db.provider);
 
   const prismaClient = requirePrismaClient(cwd);
 

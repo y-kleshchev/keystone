@@ -48,7 +48,7 @@ export const dev = async (cwd: string, shouldDropDatabase: boolean) => {
     await generateNodeModulesArtifacts(graphQLSchema, config, cwd);
 
     // Send telemetry
-    sendTelemetryEvent('keystone-build', 'development', cwd, prismaSchema);
+    sendTelemetryEvent('keystone-dev', cwd, config.db.provider, prismaSchema);
 
     // Set up the Database
     if (config.db.useMigrations) {
