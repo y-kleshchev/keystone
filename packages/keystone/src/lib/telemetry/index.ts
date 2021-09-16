@@ -21,7 +21,6 @@ export function sendTelemetryEvent(
       eventType,
       // "isCI": "true",
       // "fieldCounts": "{ count: 1} ",
-      // "dbProvider": "mssql"
     };
 
     const telemetryEndpoint = process.env.TELEMETRY_ENDPOINT || defaults.telemetryEndpoint;
@@ -36,7 +35,10 @@ export function sendTelemetryEvent(
         },
         body: JSON.stringify(eventData),
       })
-        .then()
+        .then(
+          () => {},
+          () => {}
+        )
         // Catch silently
         .catch(() => {});
     }
