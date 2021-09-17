@@ -1,6 +1,9 @@
 import os from 'os';
 import { machineIdSync } from 'node-machine-id';
+import ci from 'ci-info';
 
+// Get locale from process settings and remove any encoding
+// e.g. en_AU.UTF8 => en_AU
 const locale = () => {
   const env = process.env;
   const localeWithEncoding =
@@ -21,6 +24,6 @@ export function deviceInfo() {
     osVersion: os.release(),
     nodeVersion: process.version,
     locale: locale(),
-    // isCI: 'todo'
+    isCI: ci.isCI,
   };
 }
