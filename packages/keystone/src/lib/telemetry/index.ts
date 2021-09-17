@@ -11,7 +11,7 @@ export function sendTelemetryEvent(
   lists?: ListSchemaConfig
 ) {
   try {
-    if (process.env.TELEMETRY_DISABLED === 'true') {
+    if (process.env.TELEMETRY_DISABLED === '1') {
       return;
     }
 
@@ -43,6 +43,5 @@ export function sendTelemetryEvent(
     }
   } catch (err) {
     // Fail silently
-    console.log(err);
   }
 }
