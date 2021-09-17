@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { ListSchemaConfig } from '../../types';
 import { defaults } from '../config/defaults';
 import { deviceInfo } from './deviceInfo';
 import { projectInfo } from './projectInfo';
@@ -7,7 +8,7 @@ export function sendTelemetryEvent(
   eventType: string,
   cwd: string,
   dbProvider?: string,
-  prismaSchema?: string
+  lists?: ListSchemaConfig
 ) {
   try {
     if (process.env.TELEMETRY_DISABLED === 'true') {
@@ -16,10 +17,9 @@ export function sendTelemetryEvent(
 
     const eventData = {
       ...deviceInfo(),
-      ...projectInfo(cwd, prismaSchema),
+      ...projectInfo(cwd, lists),
       dbProvider,
       eventType,
-      // "fieldCounts": "{ count: 1} ",
     };
 
     const telemetryEndpoint = process.env.TELEMETRY_ENDPOINT || defaults.telemetryEndpoint;

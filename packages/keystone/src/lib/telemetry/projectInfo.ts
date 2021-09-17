@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import { execSync } from 'child_process';
+import { ListSchemaConfig } from '../../types';
 
 // One way SHA256 hash. When reaching the server any hashed property
 // will be rehashed with a salt before storage.
@@ -58,12 +59,22 @@ const keystonePackages = (cwd: string) => {
   }
 };
 
-export function projectInfo(cwd: string, prismaSchema?: string) {
+const listFieldCount = (lists?: ListSchemaConfig) => {
+  if (!lists) {
+    return null;
+  }
+  const listCount = Object.values(lists).map(list => {
+    return Object.keys(list.fields).length;
+  });
+
+  return listCount;
+};
+
+export function projectInfo(cwd: string, lists?: ListSchemaConfig) {
   return {
     gitOriginHash: process.env.REPOSITORY_URL || gitOrigin(),
     pathHash: hashText(cwd),
-    // fieldCounts: 'todo',
+    fieldCounts: listFieldCount(lists),
     keystonePackages: keystonePackages(cwd),
-    // dbProvider: 'todo',
   };
 }
