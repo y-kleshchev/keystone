@@ -8,6 +8,7 @@ import { initConfig } from '../../lib/config/initConfig';
 import { requireSource } from '../../lib/config/requireSource';
 import { generateNodeModulesArtifacts, validateCommittedArtifacts } from '../../artifacts';
 import { getAdminPath, getConfigPath } from '../utils';
+import { sendTelemetryEvent } from '../../lib/telemetry';
 
 // FIXME: Duplicated from admin-ui package. Need to decide on a common home.
 async function writeAdminFile(file: AdminFileToWrite, projectAdminPath: string) {
@@ -87,6 +88,8 @@ const reexportKeystoneConfig = async (cwd: string, isDisabled?: boolean) => {
 
 export async function build(cwd: string) {
   const config = initConfig(requireSource(getConfigPath(cwd)).default);
+
+  sendTelemetryEvent('keystone-build', cwd, config.db.provider, config.lists);
 
   const { graphQLSchema, adminMeta } = createSystem(config);
 
