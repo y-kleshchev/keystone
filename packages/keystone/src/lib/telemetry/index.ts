@@ -19,7 +19,6 @@ export function sendTelemetryEvent(
       ...projectInfo(cwd, prismaSchema),
       dbProvider,
       eventType,
-      // "isCI": "true",
       // "fieldCounts": "{ count: 1} ",
     };
 
@@ -28,7 +27,7 @@ export function sendTelemetryEvent(
       console.log(eventData);
     } else {
       // Do not `await` to keep non-blocking
-      fetch(`${telemetryEndpoint}/event`, {
+      fetch(`${telemetryEndpoint}/v1/event`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
