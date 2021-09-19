@@ -1,12 +1,12 @@
 import { gen, sampleOne } from 'testcheck';
 import { text, relationship } from '@keystone-next/keystone/fields';
-import { createSchema, list } from '@keystone-next/keystone';
+import { list } from '@keystone-next/keystone';
 import { setupTestRunner } from '@keystone-next/keystone/testing';
 import { apiTestConfig, expectRelationshipError } from '../../utils';
 
 const runner = setupTestRunner({
   config: apiTestConfig({
-    lists: createSchema({
+    lists: {
       Group: list({
         fields: {
           name: text(),
@@ -86,7 +86,7 @@ const runner = setupTestRunner({
           group: relationship({ ref: 'GroupNoUpdateHard' }),
         },
       }),
-    }),
+    },
   }),
 });
 
@@ -188,6 +188,34 @@ describe('non-matching filter', () => {
       expect(data).toEqual({ updateEvent: null });
       expectRelationshipError(errors, [
         { path: ['updateEvent'], message: 'Unable to connect a Event.group<Group>' },
+      ]);
+    })
+  );
+
+  test(
+    'errors on incomplete data',
+    runner(async ({ context }) => {
+      // Create an item to link against
+      const createEvent = await context.lists.Event.createOne({ data: {} });
+
+      // Create an item that does the linking
+      const { data, errors } = await context.graphql.raw({
+        query: `
+              mutation {
+                updateEvent(
+                  where: { id: "${createEvent.id}" },
+                  data: { group: {} }
+                ) {
+                  id
+                }
+              }`,
+      });
+      expect(data).toEqual({ updateEvent: null });
+      expectRelationshipError(errors, [
+        {
+          path: ['updateEvent'],
+          message: `Input error: Nested to-one mutations must provide exactly one field if they're provided but Event.group<Group> did not`,
+        },
       ]);
     })
   );

@@ -1,11 +1,11 @@
 import { text } from '@keystone-next/keystone/fields';
-import { createSchema, list } from '@keystone-next/keystone';
+import { list } from '@keystone-next/keystone';
 import { setupTestRunner } from '@keystone-next/keystone/testing';
 import { apiTestConfig, expectAccessDenied } from '../utils';
 
 const runner = setupTestRunner({
   config: apiTestConfig({
-    lists: createSchema({
+    lists: {
       // Filter access control
       User: list({
         fields: { name: text({ isOrderable: true }) },
@@ -17,7 +17,7 @@ const runner = setupTestRunner({
           },
         },
       }),
-    }),
+    },
   }),
 });
 
@@ -40,7 +40,12 @@ describe('Access control - Filter', () => {
 
       // Returns null and throws an error
       expect(data).toEqual({ updateUser: null });
-      expectAccessDenied('dev', false, undefined, errors, [{ path: ['updateUser'] }]);
+      expectAccessDenied(errors, [
+        {
+          path: ['updateUser'],
+          msg: `You cannot perform the 'update' operation on the item '{"id":"${user.id}"}'. It may not exist.`,
+        },
+      ]);
 
       // User should have its original name
       const _users = await context.lists.User.findMany({ query: 'id name' });
@@ -64,7 +69,12 @@ describe('Access control - Filter', () => {
 
       // Returns null and throws an error
       expect(data).toEqual({ deleteUser: null });
-      expectAccessDenied('dev', false, undefined, errors, [{ path: ['deleteUser'] }]);
+      expectAccessDenied(errors, [
+        {
+          path: ['deleteUser'],
+          msg: `You cannot perform the 'delete' operation on the item '{"id":"${user2.id}"}'. It may not exist.`,
+        },
+      ]);
 
       // Bad users should still be in the database.
       const _users = await context.lists.User.findMany({ query: 'id name' });
@@ -118,9 +128,15 @@ describe('Access control - Filter', () => {
           null,
         ],
       });
-      expectAccessDenied('dev', false, undefined, errors, [
-        { path: ['updateUsers', 1] },
-        { path: ['updateUsers', 3] },
+      expectAccessDenied(errors, [
+        {
+          path: ['updateUsers', 1],
+          msg: `You cannot perform the 'update' operation on the item '{"id":"${users[1].id}"}'. It may not exist.`,
+        },
+        {
+          path: ['updateUsers', 3],
+          msg: `You cannot perform the 'update' operation on the item '{"id":"${users[3].id}"}'. It may not exist.`,
+        },
       ]);
 
       // All users should still exist in the database
@@ -161,9 +177,15 @@ describe('Access control - Filter', () => {
         },
       });
 
-      expectAccessDenied('dev', false, undefined, errors, [
-        { path: ['deleteUsers', 1] },
-        { path: ['deleteUsers', 3] },
+      expectAccessDenied(errors, [
+        {
+          path: ['deleteUsers', 1],
+          msg: `You cannot perform the 'delete' operation on the item '{"id":"${users[1].id}"}'. It may not exist.`,
+        },
+        {
+          path: ['deleteUsers', 3],
+          msg: `You cannot perform the 'delete' operation on the item '{"id":"${users[3].id}"}'. It may not exist.`,
+        },
       ]);
 
       // Valid users are returned, invalid come back as null

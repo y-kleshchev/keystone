@@ -1,6 +1,6 @@
 import { gen, sampleOne } from 'testcheck';
 import { text, relationship } from '@keystone-next/keystone/fields';
-import { createSchema, list } from '@keystone-next/keystone';
+import { list } from '@keystone-next/keystone';
 import { setupTestRunner } from '@keystone-next/keystone/testing';
 import { apiTestConfig, expectRelationshipError } from '../../utils';
 
@@ -10,7 +10,7 @@ type IdType = any;
 
 const runner = setupTestRunner({
   config: apiTestConfig({
-    lists: createSchema({
+    lists: {
       Note: list({
         fields: {
           content: text(),
@@ -50,7 +50,7 @@ const runner = setupTestRunner({
           notes: relationship({ ref: 'NoteNoCreate', many: true }),
         },
       }),
-    }),
+    },
   }),
 });
 
@@ -153,7 +153,7 @@ describe('errors on incomplete data', () => {
         {
           path: ['createUser'],
           message:
-            'You must provide at least one field in to-many relationship inputs but none were provided at User.notes<Note>',
+            'Input error: You must provide at least one field in to-many relationship inputs but none were provided at User.notes<Note>',
         },
       ]);
     })

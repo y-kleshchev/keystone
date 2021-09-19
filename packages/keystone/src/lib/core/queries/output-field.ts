@@ -12,7 +12,7 @@ import {
   FieldReadItemAccessArgs,
 } from '../../../types';
 import {
-  checkOperationAccess,
+  getOperationAccess,
   getAccessFilters,
   validateFieldAccessControl,
 } from '../access-control';
@@ -44,7 +44,7 @@ function getRelationVal(
   } else {
     return async () => {
       // Check operation permission to pass into single operation
-      const operationAccess = await checkOperationAccess(foreignList, context, 'query');
+      const operationAccess = await getOperationAccess(foreignList, context, 'query');
       if (!operationAccess) {
         return null;
       }
@@ -54,6 +54,11 @@ function getRelationVal(
         return null;
       }
 
+      // Check filter access?
+      // There's no need to check filter access here (c.f. `findOne()`), as
+      // the filter has been construct internally, not as part of user input.
+
+      // Apply access control
       const resolvedWhere = await accessControlledFilter(
         foreignList,
         context,

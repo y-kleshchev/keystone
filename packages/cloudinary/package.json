@@ -10,8 +10,8 @@
     "@keystone-ui/core": "^3.2.0",
     "@keystone-ui/fields": "^4.1.3",
     "@keystone-ui/pill": "^5.0.1",
-    "@types/react": "^17.0.20",
-    "cloudinary": "^1.26.3",
+    "@types/react": "^17.0.21",
+    "cloudinary": "^1.27.0",
     "cuid": "^2.1.8",
     "graphql-upload": "^12.0.0",
     "react": "^17.0.2"
