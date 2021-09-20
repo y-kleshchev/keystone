@@ -72,12 +72,6 @@ jest.mock('node-machine-id', () => {
   };
 });
 
-// jest.mock('child_process', () => {
-//   return {
-//     execSync: () => Buffer.from('git@origin'),
-//   };
-// });
-
 jest.mock('os', () => {
   return { platform: () => 'keystone-os', release: () => '0.0.1' };
 });
@@ -107,9 +101,9 @@ describe('telemetry', () => {
 
   afterEach(() => {
     // Reset env variables
-    delete process.env.TELEMETRY_DISABLED;
-    delete process.env.TELEMETRY_ENDPOINT;
-    delete process.env.TELEMETRY_DEBUG;
+    delete process.env.KEYSTONE_TELEMETRY_DISABLED;
+    delete process.env.KEYSTONE_TELEMETRY_ENDPOINT;
+    delete process.env.KEYSTONE_TELEMETRY_DEBUG;
     delete process.env.NOW_BUILDER;
 
     // clear mocks (fetch specifically)
@@ -134,7 +128,7 @@ describe('telemetry', () => {
     defaultFetchMock();
 
     const updatedEndpoint = 'https://keylemetry.com';
-    process.env.TELEMETRY_ENDPOINT = updatedEndpoint;
+    process.env.KEYSTONE_TELEMETRY_ENDPOINT = updatedEndpoint;
 
     sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider, lists);
 
@@ -143,7 +137,7 @@ describe('telemetry', () => {
   });
 
   test("sendTelemetryEvent doesn't fetch when telemetry is disabled", () => {
-    process.env.TELEMETRY_DISABLED = '1';
+    process.env.KEYSTONE_TELEMETRY_DISABLED = '1';
     defaultFetchMock();
     sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider);
     expect(mockFetch).toHaveBeenCalledTimes(0);
@@ -160,7 +154,7 @@ describe('telemetry', () => {
   });
 
   test('TELEMETRY_DEBUG should log the output of telemetry but not fetch', () => {
-    process.env.TELEMETRY_DEBUG = '1';
+    process.env.KEYSTONE_TELEMETRY_DEBUG = '1';
     defaultFetchMock();
     sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider);
     expect(mockFetch).toHaveBeenCalledTimes(0);

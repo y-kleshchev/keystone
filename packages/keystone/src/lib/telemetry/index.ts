@@ -4,7 +4,7 @@ import { defaults } from '../config/defaults';
 import { deviceInfo } from './deviceInfo';
 import { projectInfo } from './projectInfo';
 
-if (process.env.TELEMETRY_DISABLED === '1') {
+if (process.env.KEYSTONE_TELEMETRY_DISABLED === '1') {
   // If Keystone telemetry is disabled also
   // disable NextJS & Prisma telemetry
   process.env.NEXT_TELEMETRY_DISABLED = '1';
@@ -18,7 +18,7 @@ export function sendTelemetryEvent(
   lists?: ListSchemaConfig
 ) {
   try {
-    if (process.env.TELEMETRY_DISABLED === '1') {
+    if (process.env.KEYSTONE_TELEMETRY_DISABLED === '1') {
       return;
     }
 
@@ -29,8 +29,8 @@ export function sendTelemetryEvent(
       eventType,
     };
 
-    const telemetryEndpoint = process.env.TELEMETRY_ENDPOINT || defaults.telemetryEndpoint;
-    if (process.env.TELEMETRY_DEBUG === '1') {
+    const telemetryEndpoint = process.env.KEYSTONE_TELEMETRY_ENDPOINT || defaults.telemetryEndpoint;
+    if (process.env.KEYSTONE_TELEMETRY_DEBUG === '1') {
       console.log(eventData);
     } else {
       // Do not `await` to keep non-blocking
