@@ -4,6 +4,13 @@ import { defaults } from '../config/defaults';
 import { deviceInfo } from './deviceInfo';
 import { projectInfo } from './projectInfo';
 
+if (process.env.TELEMETRY_DISABLED === '1') {
+  // If Keystone telemetry is disabled also
+  // disable NextJS & Prisma telemetry
+  process.env.NEXT_TELEMETRY_DISABLED = '1';
+  process.env.CHECKPOINT_DISABLE = '1';
+}
+
 export function sendTelemetryEvent(
   eventType: string,
   cwd: string,
