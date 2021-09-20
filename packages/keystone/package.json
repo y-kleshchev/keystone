@@ -81,6 +81,7 @@
     "chalk": "^4.1.2",
     "ci-info": "^3.2.0",
     "clipboard-copy": "^4.0.1",
+    "conf": "^10.0.3",
     "cookie": "^0.4.1",
     "copy-to-clipboard": "^3.3.1",
     "cors": "^2.8.5",

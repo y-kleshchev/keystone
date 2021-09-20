@@ -1,12 +1,20 @@
 import fetch from 'node-fetch';
+import Conf from 'conf';
 import { ListSchemaConfig } from '../../types';
 import { defaults } from '../config/defaults';
 import { deviceInfo } from './deviceInfo';
 import { projectInfo } from './projectInfo';
 
+const userConfig = new Conf();
+const userTelemetryDisabled = userConfig.get('telemetry.disabled');
+
+if (userTelemetryDisabled) {
+  process.env.KEYSTONE_TELEMETRY_DISABLED = '1';
+}
+
+// If Keystone telemetry is disabled also disable
+// NextJS & Prisma telemetry
 if (process.env.KEYSTONE_TELEMETRY_DISABLED === '1') {
-  // If Keystone telemetry is disabled also
-  // disable NextJS & Prisma telemetry
   process.env.NEXT_TELEMETRY_DISABLED = '1';
   process.env.CHECKPOINT_DISABLE = '1';
 }
