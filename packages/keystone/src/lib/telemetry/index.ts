@@ -38,11 +38,14 @@ export function sendTelemetryEvent(
     };
 
     const telemetryEndpoint = process.env.KEYSTONE_TELEMETRY_ENDPOINT || defaults.telemetryEndpoint;
+    const telemetryUrl = `${telemetryEndpoint}/v1/event`;
+
     if (process.env.KEYSTONE_TELEMETRY_DEBUG === '1') {
+      console.log(`[Telemetry]: ${telemetryUrl}`);
       console.log(eventData);
     } else {
       // Do not `await` to keep non-blocking
-      fetch(`${telemetryEndpoint}/v1/event`, {
+      fetch(telemetryUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
