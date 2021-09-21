@@ -28,7 +28,9 @@ KeystoneJS telemetry: ${chalk.green('Enabled')}
   Telemetry is completely anonymous and helps us make Keystone better.
   For more details visit: https://keystonejs.com/telemetry`;
 
-  const config = new Conf();
+  // Set a generic Keystone project name that we can use across keystone apps
+  // e.g. create-keystone-app. By default it uses the package name
+  const config = new Conf({ projectName: 'keystonejs' });
   if (status === 'status') {
     const telemetryDisabled = config.get('telemetry.disabled');
     console.log(telemetryDisabled ? disabledText : enabledText);

@@ -5,7 +5,7 @@ import { defaults } from '../config/defaults';
 import { deviceInfo } from './deviceInfo';
 import { projectInfo } from './projectInfo';
 
-const userConfig = new Conf();
+const userConfig = new Conf({ projectName: 'keystonejs' });
 const userTelemetryDisabled = userConfig.get('telemetry.disabled');
 
 if (userTelemetryDisabled) {
