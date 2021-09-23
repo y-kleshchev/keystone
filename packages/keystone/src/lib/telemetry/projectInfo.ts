@@ -1,6 +1,7 @@
 import { createHash } from 'crypto';
 import { execSync } from 'child_process';
 import { ListSchemaConfig } from '../../types';
+import { GraphQLSchema } from 'graphql';
 
 // One way SHA256 hash. When reaching the server any hashed property
 // will be rehashed with a salt before storage.
@@ -70,10 +71,10 @@ const listFieldCount = (lists?: ListSchemaConfig) => {
   return listCount;
 };
 
-export function projectInfo(cwd: string, lists?: ListSchemaConfig) {
+export function projectInfo(cwd: string, lists: ListSchemaConfig, graphQLSchema: GraphQLSchema) {
   return {
     gitOriginHash: process.env.REPOSITORY_URL || gitOrigin(),
-    pathHash: hashText(cwd),
+    schemaHash: hashText(JSON.stringify(graphQLSchema)),
     fieldCounts: listFieldCount(lists),
     keystonePackages: keystonePackages(cwd),
   };

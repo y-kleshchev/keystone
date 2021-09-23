@@ -4,6 +4,7 @@ import { ListSchemaConfig } from '../../types';
 import { defaults } from '../config/defaults';
 import { deviceInfo } from './deviceInfo';
 import { projectInfo } from './projectInfo';
+import { GraphQLSchema } from 'graphql';
 
 // Load global telemetry config settings (if set)
 const userConfig = new Conf({ projectName: 'keystonejs' });
@@ -36,8 +37,9 @@ For more details, including how to opt-out, visit: https://keystonejs.com/teleme
 export function sendTelemetryEvent(
   eventType: string,
   cwd: string,
-  dbProvider?: string,
-  lists?: ListSchemaConfig
+  dbProvider: string,
+  lists: ListSchemaConfig,
+  graphQLSchema: GraphQLSchema
 ) {
   try {
     if (process.env.KEYSTONE_TELEMETRY_DISABLED === '1') {
@@ -48,7 +50,7 @@ export function sendTelemetryEvent(
 
     const eventData = {
       ...deviceInfo(),
-      ...projectInfo(cwd, lists),
+      ...projectInfo(cwd, lists, graphQLSchema),
       dbProvider,
       eventType,
     };

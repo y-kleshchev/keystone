@@ -76,9 +76,9 @@ const reexportKeystoneConfig = async (cwd: string, isDisabled?: boolean) => {
 export async function build(cwd: string) {
   const config = initConfig(requireSource(getConfigPath(cwd)).default);
 
-  sendTelemetryEvent('keystone-build', cwd, config.db.provider, config.lists);
-
   const { graphQLSchema, adminMeta } = createSystem(config);
+
+  sendTelemetryEvent('keystone-build', cwd, config.db.provider, config.lists, graphQLSchema);
 
   await validateCommittedArtifacts(graphQLSchema, config, cwd);
 
