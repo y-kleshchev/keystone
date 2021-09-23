@@ -5,9 +5,10 @@ import { defaults } from '../config/defaults';
 import { deviceInfo } from './deviceInfo';
 import { projectInfo } from './projectInfo';
 
+// Load global telemetry config settings (if set)
 const userConfig = new Conf({ projectName: 'keystonejs' });
+const userTelemetryNotified = userConfig.get('telemetry.notified');
 const userTelemetryDisabled = userConfig.get('telemetry.disabled');
-
 if (userTelemetryDisabled) {
   process.env.KEYSTONE_TELEMETRY_DISABLED = '1';
 }
@@ -19,6 +20,19 @@ if (process.env.KEYSTONE_TELEMETRY_DISABLED === '1') {
   process.env.CHECKPOINT_DISABLE = '1';
 }
 
+const notify = () => {
+  // Only nag the user once about this
+  if (!userTelemetryNotified) {
+    console.log(`
+ℹ️  Keystone collects completely anonymous usage data. 
+The data Keystone collects is anonymised and aggregated, and helps us better support Keystone.
+For more details, including how to opt-out, visit: https://keystonejs.com/telemetry
+`);
+    // Save as a date incase we want to re-notify in the future
+    userConfig.set('telemetry.notified', new Date().toISOString());
+  }
+};
+
 export function sendTelemetryEvent(
   eventType: string,
   cwd: string,
@@ -29,6 +43,8 @@ export function sendTelemetryEvent(
     if (process.env.KEYSTONE_TELEMETRY_DISABLED === '1') {
       return;
     }
+
+    notify();
 
     const eventData = {
       ...deviceInfo(),
