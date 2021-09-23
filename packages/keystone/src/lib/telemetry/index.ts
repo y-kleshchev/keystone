@@ -14,8 +14,7 @@ if (userTelemetryDisabled) {
   process.env.KEYSTONE_TELEMETRY_DISABLED = '1';
 }
 
-// If Keystone telemetry is disabled also disable
-// NextJS & Prisma telemetry
+// If Keystone telemetry is disabled also disable NextJS & Prisma telemetry
 if (process.env.KEYSTONE_TELEMETRY_DISABLED === '1') {
   process.env.NEXT_TELEMETRY_DISABLED = '1';
   process.env.CHECKPOINT_DISABLE = '1';

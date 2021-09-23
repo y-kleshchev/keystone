@@ -4,6 +4,7 @@ import { sendTelemetryEvent } from '../src/lib/telemetry';
 import { deviceInfo } from '../src/lib/telemetry/deviceInfo';
 import { projectInfo } from '../src/lib/telemetry/projectInfo';
 import { ListSchemaConfig } from '../src/types';
+import { GraphQLSchema } from 'graphql';
 
 const deviceData = {
   deviceHash: 'device',
@@ -16,7 +17,7 @@ const deviceData = {
 
 const projectData = {
   gitOriginHash: 'git@origin',
-  pathHash: 'path',
+  schemaHash: { description: 'graphQLSchema' } as GraphQLSchema,
   fieldCounts: [3, 2],
   keystonePackages: { '@keystonejs/keystone': '1.2.3' },
 };
@@ -40,7 +41,7 @@ const defaultFetchParam = {
   body: JSON.stringify({
     ...eventData,
     deviceHash: `${eventData.deviceHash}-hashed`,
-    pathHash: `${eventData.pathHash}-hashed`,
+    schemaHash: `${JSON.stringify(eventData.schemaHash)}-hashed`,
     gitOriginHash: `origin-hashed`,
   }),
 };
@@ -66,6 +67,8 @@ const lists: ListSchemaConfig = {
   },
 };
 
+const cwd = 'path';
+
 jest.mock('node-machine-id', () => {
   return {
     machineIdSync: () => `device-hashed`,
@@ -74,6 +77,13 @@ jest.mock('node-machine-id', () => {
 
 jest.mock('os', () => {
   return { platform: () => 'keystone-os', release: () => '0.0.1' };
+});
+
+jest.mock('conf', () => {
+  return jest.fn().mockImplementation(() => ({
+    get: () => false, // Must return false else telemetry is disabled
+    set: () => {},
+  }));
 });
 
 jest.mock('crypto', () => {
@@ -114,7 +124,7 @@ describe('telemetry', () => {
     defaultExecSyncMock();
     defaultFetchMock();
 
-    sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider, lists);
+    sendTelemetryEvent(eventData.eventType, cwd, eventData.dbProvider, lists, eventData.schemaHash);
 
     expect(mockFetch).toHaveBeenCalledWith(
       `https://telemetry.keystonejs.com/v1/event`,
@@ -130,7 +140,7 @@ describe('telemetry', () => {
     const updatedEndpoint = 'https://keylemetry.com';
     process.env.KEYSTONE_TELEMETRY_ENDPOINT = updatedEndpoint;
 
-    sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider, lists);
+    sendTelemetryEvent(eventData.eventType, cwd, eventData.dbProvider, lists, eventData.schemaHash);
 
     expect(mockFetch).toHaveBeenCalledWith(`${updatedEndpoint}/v1/event`, defaultFetchParam);
     expect(mockFetch).toHaveBeenCalledTimes(1);
@@ -139,7 +149,7 @@ describe('telemetry', () => {
   test("sendTelemetryEvent doesn't fetch when telemetry is disabled", () => {
     process.env.KEYSTONE_TELEMETRY_DISABLED = '1';
     defaultFetchMock();
-    sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider);
+    sendTelemetryEvent(eventData.eventType, cwd, eventData.dbProvider, lists, eventData.schemaHash);
     expect(mockFetch).toHaveBeenCalledTimes(0);
   });
 
@@ -150,13 +160,13 @@ describe('telemetry', () => {
 
     expect(sendTelemetryEvent).not.toThrow();
 
-    sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider);
+    sendTelemetryEvent(eventData.eventType, cwd, eventData.dbProvider, lists, eventData.schemaHash);
   });
 
   test('TELEMETRY_DEBUG should log the output of telemetry but not fetch', () => {
     process.env.KEYSTONE_TELEMETRY_DEBUG = '1';
     defaultFetchMock();
-    sendTelemetryEvent(eventData.eventType, eventData.pathHash, eventData.dbProvider);
+    sendTelemetryEvent(eventData.eventType, cwd, eventData.dbProvider, lists, eventData.schemaHash);
     expect(mockFetch).toHaveBeenCalledTimes(0);
   });
 
@@ -169,31 +179,31 @@ describe('telemetry', () => {
 
   test('normalize git origin works with different git urls', () => {
     mockedExecSync.mockReturnValueOnce(Buffer.from('git@github.com:keystone/keystone.git'));
-    const projectResultsSSH = projectInfo(eventData.pathHash);
+    const projectResultsSSH = projectInfo(cwd, lists, eventData.schemaHash);
     expect(projectResultsSSH.gitOriginHash).toBe('github.com/keystone/keystone.git-hashed');
 
     mockedExecSync.mockReturnValueOnce(Buffer.from('https://github.com/keystone/keystone.git'));
-    const projectResultsHTTPS = projectInfo(eventData.pathHash);
+    const projectResultsHTTPS = projectInfo(cwd, lists, eventData.schemaHash);
     expect(projectResultsHTTPS.gitOriginHash).toBe('github.com/keystone/keystone.git-hashed');
 
     mockedExecSync.mockReturnValueOnce(Buffer.from('http://github.com/keystone/keystone.git'));
-    const projectResultsHTTP = projectInfo(eventData.pathHash);
+    const projectResultsHTTP = projectInfo(cwd, lists, eventData.schemaHash);
     expect(projectResultsHTTP.gitOriginHash).toBe('github.com/keystone/keystone.git-hashed');
 
     mockedExecSync.mockReturnValueOnce(
       Buffer.from('https://username@github.com/keystone/keystone.git')
     );
-    const projectResultsHTTPSUsername = projectInfo(eventData.pathHash);
+    const projectResultsHTTPSUsername = projectInfo(cwd, lists, eventData.schemaHash);
     expect(projectResultsHTTPSUsername.gitOriginHash).toBe(
       'github.com/keystone/keystone.git-hashed'
     );
 
     mockedExecSync.mockReturnValueOnce(Buffer.from(''));
-    const projectResultsEmptyString = projectInfo(eventData.pathHash);
+    const projectResultsEmptyString = projectInfo(cwd, lists, eventData.schemaHash);
     expect(projectResultsEmptyString.gitOriginHash).toBe(null);
 
     mockedExecSync.mockReturnValueOnce(Buffer.from('git@github.com:keystone/keystone.git\n'));
-    const projectResultsNewLine = projectInfo(eventData.pathHash);
+    const projectResultsNewLine = projectInfo(cwd, lists, eventData.schemaHash);
     expect(projectResultsNewLine.gitOriginHash).toBe('github.com/keystone/keystone.git-hashed');
   });
 });
