@@ -6,7 +6,7 @@ export const extendGraphqlSchema = graphQLSchemaExtension({
       """ Publish a post """
       publishPost(id: ID!): Post
 
-      """ Create or update an auth based on email """
+      """ Create or update an author based on email """
       upsertAuthor(where: AuthorWhereUniqueInput!, create: AuthorCreateInput!, update: AuthorUpdateInput!): Author
     }
 
