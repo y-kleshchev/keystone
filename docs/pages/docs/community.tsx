@@ -2,7 +2,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 
-import Link from 'next/link';
 import { Type } from '../../components/primitives/Type';
 import { DocsPage } from '../../components/Page';
 import { Well } from '../../components/primitives/Well';
