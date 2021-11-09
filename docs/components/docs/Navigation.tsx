@@ -143,7 +143,13 @@ export function DocsNavigation() {
       }}
     >
       <PrimaryNavItem href="/docs">Docs Home</PrimaryNavItem>
-      <PrimaryNavItem href="/docs/walkthroughs">Walkthroughs</PrimaryNavItem>
+      <Section>
+        <PrimaryNavItem href="/docs/walkthroughs">Walkthroughs</PrimaryNavItem>
+        <NavItem href="/docs/walkthroughs/getting-started-with-create-keystone-app">
+          Getting Started
+        </NavItem>
+        <NavItem href="/docs/walkthroughs/embedded-mode-with-sqlite-nextjs">Embedded Mode</NavItem>
+      </Section>
       <Section>
         <PrimaryNavItem href="/docs/examples">Examples</PrimaryNavItem>
         <NavItem href="/docs/examples/#base-projects">Basic</NavItem>
