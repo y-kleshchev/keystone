@@ -130,7 +130,7 @@ export default function Docs() {
         <Well
           grad="grad2"
           heading="Dimension"
-          subheading="Gautam Singh"
+          subheading="by Gautam Singh"
           href="https://github.com/keystonejs-contrib/k6-contrib/tree/main/packages/fields-dimension"
           target="_blank"
           rel="noopener noreferrer"
