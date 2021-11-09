@@ -1,25 +1,25 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from 'react';
-import parseISO from 'date-fns/parseISO';
-import { useRouter } from 'next/router';
-import { jsx } from '@emotion/react';
-import format from 'date-fns/format';
-import Link from 'next/link';
+import { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from "react";
+import parseISO from "date-fns/parseISO";
+import { useRouter } from "next/router";
+import { jsx } from "@emotion/react";
+import format from "date-fns/format";
+import Link from "next/link";
 
-import { useMediaQuery } from '../../lib/media';
-import { useHeaderContext } from '../Header';
-import { Badge } from '../primitives/Badge';
-import { Type } from '../primitives/Type';
-import { Emoji } from '../primitives/Emoji';
+import { useMediaQuery } from "../../lib/media";
+import { useHeaderContext } from "../Header";
+import { Badge } from "../primitives/Badge";
+import { Type } from "../primitives/Type";
+import { Emoji } from "../primitives/Emoji";
 
 type SectionProps = { label?: string; children: ReactNode };
 export function Section({ label, children }: SectionProps) {
   return (
     <div
       css={{
-        marginBottom: 'var(--space-xlarge)',
-        marginTop: 'var(--space-xlarge)',
+        marginBottom: "var(--space-xlarge)",
+        marginTop: "var(--space-xlarge)",
       }}
     >
       {label && (
@@ -29,7 +29,7 @@ export function Section({ label, children }: SectionProps) {
           margin="var(--space-xlarge) 0 var(--space-large) 0"
           color="var(--text-heading)"
           css={{
-            textTransform: 'uppercase',
+            textTransform: "uppercase",
             fontWeight: 700,
           }}
         >
@@ -65,21 +65,23 @@ export function NavItem({
   return (
     <Link href={href} passHref>
       <a
-        {...(alwaysVisible ? {} : { tabIndex: isMobileNavOpen ? 0 : desktopOpenState })}
+        {...(alwaysVisible
+          ? {}
+          : { tabIndex: isMobileNavOpen ? 0 : desktopOpenState })}
         css={mq({
-          display: 'block',
-          textDecoration: 'none',
+          display: "block",
+          textDecoration: "none",
           padding: [
-            '0 0 var(--space-medium) 0 var(--space-medium)',
-            '0 0 var(--space-medium) var(--space-medium)',
+            "0 0 var(--space-medium) 0 var(--space-medium)",
+            "0 0 var(--space-medium) var(--space-medium)",
             null,
-            '0 0 var(--space-large) var(--space-medium)',
+            "0 0 var(--space-large) var(--space-medium)",
           ],
           color: isActive
-            ? 'var(--link)'
-            : `${isPlaceholder ? 'var(--text-disabled)' : 'var(--text)'}`,
-          ':hover': {
-            color: 'var(--link)',
+            ? "var(--link)"
+            : `${isPlaceholder ? "var(--text-disabled)" : "var(--text)"}`,
+          ":hover": {
+            color: "var(--link)",
           },
         })}
         {...props}
@@ -105,14 +107,14 @@ export function PrimaryNavItem({ href, children }: PrimaryNavItemProps) {
       <a
         tabIndex={isMobileNavOpen ? 0 : desktopOpenState}
         css={{
-          display: 'block',
-          fontSize: '1rem',
-          color: isActive ? 'var(--link)' : 'var(--text-heading)',
-          marginBottom: '1rem',
-          alignItems: 'center',
+          display: "block",
+          fontSize: "1rem",
+          color: isActive ? "var(--link)" : "var(--text-heading)",
+          marginBottom: "1rem",
+          alignItems: "center",
           fontWeight: 700,
-          ':hover': {
-            color: 'var(--link)',
+          ":hover": {
+            color: "var(--link)",
           },
         }}
       >
@@ -129,7 +131,7 @@ function SubHeading(props: HTMLAttributes<HTMLElement>) {
       look="body14bold"
       color="var(--muted)"
       margin="1.5rem 0 1rem 0"
-      css={{ textTransform: 'uppercase' }}
+      css={{ textTransform: "uppercase" }}
       {...props}
     />
   );
@@ -168,15 +170,23 @@ export function DocsNavigation() {
         </NavItem>
         <NavItem href="/docs/guides/testing">Testing</NavItem>
         <NavItem href="/docs/guides/document-fields">Document Fields</NavItem>
-        <NavItem href="/docs/guides/document-field-demo">Document Field Demo</NavItem>
+        <NavItem href="/docs/guides/document-field-demo">
+          Document Field Demo
+        </NavItem>
         <NavItem href="/docs/guides/virtual-fields">Virtual Fields</NavItem>
         <NavItem href="/docs/guides/custom-fields">Custom Fields</NavItem>
         <NavItem href="/docs/guides/custom-field-views" isPlaceholder>
           Custom Field Views
         </NavItem>
-        <NavItem href="/docs/guides/custom-admin-ui-logo">Custom Admin UI Logo</NavItem>
-        <NavItem href="/docs/guides/custom-admin-ui-pages">Custom Admin UI Pages</NavItem>
-        <NavItem href="/docs/guides/custom-admin-ui-navigation">Custom Admin UI Navigation</NavItem>
+        <NavItem href="/docs/guides/custom-admin-ui-logo">
+          Custom Admin UI Logo
+        </NavItem>
+        <NavItem href="/docs/guides/custom-admin-ui-pages">
+          Custom Admin UI Pages
+        </NavItem>
+        <NavItem href="/docs/guides/custom-admin-ui-navigation">
+          Custom Admin UI Navigation
+        </NavItem>
       </Section>
       <Section>
         <PrimaryNavItem href="/docs/apis">APIs</PrimaryNavItem>
@@ -208,6 +218,14 @@ export function DocsNavigation() {
           Query Filter API <Badge look="success">Updated</Badge>
         </NavItem>
       </Section>
+      <Section>
+        <PrimaryNavItem href="/docs/community">
+          Community Contributions
+        </PrimaryNavItem>
+        <NavItem href="/docs/examples/#authentication">Authentication</NavItem>
+        <NavItem href="/docs/examples/#fields">Fields</NavItem>
+        <NavItem href="/docs/examples/#deployment">Deployment</NavItem>
+      </Section>
     </nav>
   );
 }
@@ -224,9 +242,9 @@ export function UpdatesNavigation({ releases = [] }: { releases: string[] }) {
       <PrimaryNavItem href="/releases">Release Notes</PrimaryNavItem>
       {releases.length ? (
         <Section label="Recent Releases">
-          {releases.map(name => (
+          {releases.map((name) => (
             <NavItem key={name} href={`/releases/${name}`}>
-              {format(parseISO(name), 'do LLL yyyy')}
+              {format(parseISO(name), "do LLL yyyy")}
             </NavItem>
           ))}
         </Section>
