@@ -119,7 +119,7 @@ export default function Docs() {
         <Well
           grad="grad2"
           heading="BigInt"
-          subheading="Alexey Murz Korepov"
+          subheading="by Alexey Murz Korepov"
           href="https://github.com/keystonejs-contrib/k6-contrib/tree/main/packages/fields-bigint"
           target="_blank"
           rel="noopener noreferrer"
