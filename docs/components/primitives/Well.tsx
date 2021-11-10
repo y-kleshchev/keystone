@@ -69,9 +69,10 @@ export function Well({
         </Type>
         {subheading && (
           <Type
-            as="h3"
             look="body14"
             css={{
+              display: 'block',
+              color: 'var(--muted)',
               margin: '0 0 1rem 0 !important',
             }}
           >
