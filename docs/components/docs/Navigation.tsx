@@ -216,9 +216,9 @@ export function DocsNavigation() {
       </Section>
       <Section>
         <PrimaryNavItem href="/docs/community">Community Contributions</PrimaryNavItem>
-        <NavItem href="/docs/examples/#authentication">Authentication</NavItem>
-        <NavItem href="/docs/examples/#fields">Fields</NavItem>
-        <NavItem href="/docs/examples/#deployment">Deployment</NavItem>
+        <NavItem href="/docs/community/#authentication">Authentication</NavItem>
+        <NavItem href="/docs/community/#fields">Fields</NavItem>
+        <NavItem href="/docs/community/#deployment">Deployment</NavItem>
       </Section>
     </nav>
   );
