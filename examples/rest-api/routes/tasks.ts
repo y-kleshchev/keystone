@@ -11,14 +11,17 @@ import type { KeystoneContext } from '@keystone-6/core/types';
   We're also demonstrating how you can query related data through the schema.
 */
 
-export async function getTasks(req: Request, res: Response) {
+export async function getTasks(
+	request  : Request & { context: KeystoneContext },
+	response : Response
+) {
   // This was added by the context middleware in ../keystone.ts
-  const context = (req as any).context as KeystoneContext;
+  const { context, query } = request;
   // Let's map the `complete` query param to a where filter
   let isComplete;
-  if (req.query.complete === 'true') {
+  if (query.complete === 'true') {
     isComplete = { equals: true };
-  } else if (req.query.complete === 'false') {
+  } else if (query.complete === 'false') {
     isComplete = { equals: false };
   }
   // Now we can use it to query the Keystone Schema
@@ -38,5 +41,5 @@ export async function getTasks(req: Request, res: Response) {
     `,
   });
   // And return the result as JSON
-  res.json(tasks);
+  response.json(tasks);
 }
