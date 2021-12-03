@@ -1,5 +1,11 @@
 # @keystone-next/keystone
 
+## 1.0.1
+
+### Patch Changes
+
+- [#7029](https://github.com/keystonejs/keystone/pull/7029) [`53f3ca6fd`](https://github.com/keystonejs/keystone/commit/53f3ca6fdbef16b305a41240f107754ad6823ff7) Thanks [@rohan-deshpande](https://github.com/rohan-deshpande)! - Explicitly disable caching for redirect responses in the Admin UI
+
 ## 1.0.0
 
 ### Major Changes
